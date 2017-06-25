@@ -83,7 +83,7 @@ class PickerKeyboard extends Component {
             {props.options.map((option, index) => {
               return (
                 <Picker.Item
-                  key={option.value}
+                  key={option.value || index}
                   value={option.value}
                   label={option.label}
                 />
