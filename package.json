@@ -5,7 +5,9 @@
   "main": "./src/index.js",
   "scripts": {
     "lint": "eslint *.js",
-    "test": "eslint *.js && cd example && jest"
+    "test": "eslint *.js && cd example && jest",
+    "flow": "node_modules/.bin/flow",
+    "flow-stop": "node_modules/.bin/flow stop"
   },
   "repository": {
     "type": "git",
@@ -27,12 +29,24 @@
   },
   "homepage": "https://github.com/markuswind/react-native-select-input-ios#readme",
   "devDependencies": {
-    "babel-eslint": "^6.1.0",
+    "babel-eslint": "^6.1.2",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "9.0.1",
+    "eslint-plugin-flowtype": "^2.34.0",
     "eslint-plugin-import": "1.9.2",
     "eslint-plugin-jsx-a11y": "1.5.3",
     "eslint-plugin-react": "^5.2.2",
-    "jest": "^20.0.4"
+    "flow-bin": "^0.48.0",
+    "jest": "^20.0.4",
+    "standard": "^10.0.2"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "flowtype"
+    ]
+  },
+  "dependencies": {
+    "react-native": "^0.45.1"
   }
 }
