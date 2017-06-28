@@ -126,6 +126,7 @@ export default class example extends Component {
             color: 'white'
           }}
           useBackdrop
+          updateOnChange={false}
         />
 
         <View style={styles.bananawrapper}>

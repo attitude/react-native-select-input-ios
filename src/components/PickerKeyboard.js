@@ -48,10 +48,13 @@ class PickerKeyboard extends Component {
     onSubmit && onSubmit(this.state.value);
   }
 
-  onValueChange(value) {
+  onValueChange(value, index) {
     this.setState({
       value: value
     });
+
+    let onChange = this.props.onChange;
+    onChange && onChange(value, index);
   }
 
   setVisible(visible) {
@@ -79,6 +82,7 @@ class PickerKeyboard extends Component {
         submitKeyText={props.submitKeyText}
         visible={this.state.visible}
         useBackdrop={props.useBackdrop}
+        updateOnChange={props.updateOnChange}
         >
         <Picker
           ref={(c) => { this.picker = c; }}
@@ -104,6 +108,7 @@ class PickerKeyboard extends Component {
 
 PickerKeyboard.propTypes = {
   useBackdrop:                    PropTypes.bool,
+  updateOnChange:                 PropTypes.bool,
   buttonsTextColor:               PropTypes.string,
   cancelKeyText:                  PropTypes.string,
   onCancel:                       PropTypes.func,

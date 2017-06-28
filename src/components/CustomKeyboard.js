@@ -87,13 +87,20 @@ class CustomKeyboard extends Component {
                 })
               }}
             >
-              <View style={[styles.keyboardHeader, props.styleKeyboardHeader]}>
-                <KeyboardButton
-                  style={props.styleKeyboardButtonLeft}
-                  styleLabel={props.styleKeyboardButtonLeftLabel}
-                  onPress={this.onCancelPress.bind(this)}
-                  text={props.cancelKeyText}
-                />
+              <View
+                style={[
+                  styles.keyboardHeader,
+                  props.updateOnChange ? { justifyContent: 'flex-end'} : {},
+                  props.styleKeyboardHeader
+                ]}>
+                {!props.updateOnChange &&
+                  <KeyboardButton
+                    style={props.styleKeyboardButtonLeft}
+                    styleLabel={props.styleKeyboardButtonLeftLabel}
+                    onPress={this.onCancelPress.bind(this)}
+                    text={props.cancelKeyText}
+                  />
+                }
 
                 <KeyboardButton
                   style={props.styleKeyboardButtonRight}
@@ -118,6 +125,7 @@ class CustomKeyboard extends Component {
 
 CustomKeyboard.propTypes =  {
   useBackdrop:                    PropTypes.bool,
+  updateOnChange:                 PropTypes.bool,
   buttonTextColor:                PropTypes.string,
   cancelKeyText:                  PropTypes.string,
   onCancelPress:                  PropTypes.func.isRequired,

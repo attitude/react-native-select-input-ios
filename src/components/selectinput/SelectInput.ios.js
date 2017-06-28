@@ -42,6 +42,20 @@ class SelectInput extends AbstractSelectInput {
     props.onBeginEditing && props.onBeginEditing();
   }
 
+  onChange (value, index) {
+    let props = this.props
+
+    let onValueChange = this.props.onValueChange;
+
+    if (props.updateOnChange) {
+      this.setState({selectedValue: value}, function() {
+        onValueChange && onValueChange(value, index);
+      });
+    } else {
+      onValueChange && onValueChange(value, index);
+    }
+  }
+
   render() {
     let props = this.props;
 
@@ -74,6 +88,7 @@ class SelectInput extends AbstractSelectInput {
               options={props.options}
               value={this.state.selectedValue}
               onCancel={this.onCancel.bind(this)}
+              onChange={this.onChange.bind(this)}
               onSubmit={this.onSubmit.bind(this)}
               pickerItemColor={props.pickerItemColor}
               styleKeyboard={props.styleKeyboard}
@@ -87,6 +102,7 @@ class SelectInput extends AbstractSelectInput {
               submitKeyText={props.submitKeyText}
               cancelKeyText={props.cancelKeyText}
               useBackdrop={props.useBackdrop}
+              updateOnChange={props.updateOnChange}
             />
           </View>
           {props.separator && <View style={styles.separator} />}
@@ -98,11 +114,13 @@ class SelectInput extends AbstractSelectInput {
 
 SelectInput.propTypes = {
   useBackdrop:              PropTypes.bool,
+  updateOnChange:           PropTypes.bool,
   buttonsTextColor:         PropTypes.string,
   cancelKeyText:            PropTypes.string,
   keyboardBackgroundColor:  PropTypes.string,
   labelStyle:               PropTypes.object,
   onEndEditing:             PropTypes.func,
+  onValueChange:            PropTypes.func,
   onSubmitEditing:          PropTypes.func,
   options:                  PropTypes.array,
   submitKeyText:            PropTypes.string,
@@ -120,6 +138,7 @@ SelectInput.propTypes = {
 
 SelectInput.defaultProps = {
   useBackdrop:             false,
+  updateOnChange:          true, // Default behaviour on iOS
   cancelKeyText:           'Cancel',
   keyboardBackgroundColor: '#FFFFFF',
   buttonsTextColor:        '#006BFF',
