@@ -66,13 +66,13 @@ class SelectInput extends AbstractSelectInput {
               allowsFontScaling={false}
               numberOfLines={1}
               >
-              {this.getValueLabel()}
+              {this.getValueLabel(this.state.selectedValue)}
             </Text>
 
             <PickerKeyboard
               ref={(c) => { this.pickerKeyboard = c; }}
               options={props.options}
-              value={props.value}
+              value={this.state.selectedValue}
               onCancel={this.onCancel.bind(this)}
               onSubmit={this.onSubmit.bind(this)}
               pickerItemColor={props.pickerItemColor}

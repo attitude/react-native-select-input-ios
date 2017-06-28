@@ -32,12 +32,12 @@ class AbstractSelectInput extends Component {
     });
   }
 
-  getValueLabel() {
+  getValueLabel(value) {
     let props = this.props;
     let options = props.options || [{value: '', label: ''}];
 
     var label = options.map(function(object) {
-      if (object.value === props.value) {
+      if (object.value === value) {
         return object.label;
       }
     });
