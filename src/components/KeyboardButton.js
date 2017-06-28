@@ -9,23 +9,22 @@ import React, { Component } from 'react';
 import {
   Dimensions,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
 
-const BUTTON_WIDTH = Dimensions.get('window').width * 0.25;
+import styles from '../stylesheets/selectInputIOS.css.js';
 
 class KeyboardButton extends Component {
   render() {
     let props = this.props;
 
     return (
-      <TouchableOpacity onPress={props.onPress}>
-        <Text style={{
-            width: BUTTON_WIDTH,
-            color: props.color,
-            textAlign: props.textAlign
-          }}
-        >
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={[styles.keyboardButton, props.style]}
+      >
+        <Text style={[styles.keyboardButtonLabel, props.styleLabel]}>
           {props.text}
         </Text>
       </TouchableOpacity>
@@ -34,10 +33,10 @@ class KeyboardButton extends Component {
 }
 
 KeyboardButton.propTypes =  {
-  color:     PropTypes.string.isRequired,
-  onPress:   PropTypes.func.isRequired,
-  text:      PropTypes.string.isRequired,
-  textAlign: PropTypes.string.isRequired,
+  style:      PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleLabel: PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  onPress:    PropTypes.func.isRequired,
+  text:       PropTypes.string.isRequired
 };
 
 export default KeyboardButton;

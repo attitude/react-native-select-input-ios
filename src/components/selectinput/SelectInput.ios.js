@@ -21,7 +21,8 @@ class SelectInput extends AbstractSelectInput {
 
     // initial state
     this.state = {
-      selectedValue: props.value
+      selectedValue: props.value,
+      active: false
     };
   }
 
@@ -33,6 +34,10 @@ class SelectInput extends AbstractSelectInput {
     let props = this.props;
     let pickerKeyboard = this.pickerKeyboard;
 
+    this.setState({
+      active: true
+    });
+
     pickerKeyboard && pickerKeyboard.focus();
     props.onBeginEditing && props.onBeginEditing();
   }
@@ -43,28 +48,48 @@ class SelectInput extends AbstractSelectInput {
     // TODO: - add fully customizable styles
     return (
       <TouchableWithoutFeedback onPress={this.focus.bind(this)}>
-        <View style={props.style}>
-          <Text
-            style={props.labelStyle || styles.defaultlabelstyle}
-            adjustFontSizeToFit={true}
-            allowsFontScaling={false}
-            numberOfLines={1}
-            >
-            {this.getValueLabel()}
-          </Text>
+        <View style={[styles.fieldWrapper, props.style]}>
+          <View style={[styles.field, props.styleField]}>
+            {props.label &&
+              <Text
+                style={[styles.fieldLabel, props.styleFieldLabel]}
+              >{props.label}</Text>
+            }
+            <Text
+              style={[
+                styles.fieldValue,
+                props.styleFieldValue,
+                this.state.active ? styles.fieldValueIsActive : {},
+                this.state.active ? props.styleFieldValueIsActive : {},
+              ]}
+              adjustFontSizeToFit={true}
+              allowsFontScaling={false}
+              numberOfLines={1}
+              >
+              {this.getValueLabel()}
+            </Text>
 
-          <PickerKeyboard
-            ref={(c) => { this.pickerKeyboard = c; }}
-            options={props.options}
-            value={props.value}
-            onCancel={this.onCancel.bind(this)}
-            onSubmit={this.onSubmit.bind(this)}
-            buttonsBackgroundColor={props.buttonsBackgroundColor}
-            buttonsTextColor={props.buttonsTextColor}
-            keyboardBackgroundColor={props.keyboardBackgroundColor}
-            submitKeyText={props.submitKeyText}
-            cancelKeyText={props.cancelKeyText}
-          />
+            <PickerKeyboard
+              ref={(c) => { this.pickerKeyboard = c; }}
+              options={props.options}
+              value={props.value}
+              onCancel={this.onCancel.bind(this)}
+              onSubmit={this.onSubmit.bind(this)}
+              pickerItemColor={props.pickerItemColor}
+              styleKeyboard={props.styleKeyboard}
+              styleKeyboardHeader={props.styleKeyboardHeader}
+              styleKeyboardButtonLeft={props.styleKeyboardButtonLeft}
+              styleKeyboardButtonLeftLabel={props.styleKeyboardButtonLeftLabel}
+              styleKeyboardButtonRight={props.styleKeyboardButtonRight}
+              styleKeyboardButtonRightLabel={props.styleKeyboardButtonRightLabel}
+              buttonsTextColor={props.buttonsTextColor}
+              keyboardBackgroundColor={props.keyboardBackgroundColor}
+              submitKeyText={props.submitKeyText}
+              cancelKeyText={props.cancelKeyText}
+              useBackdrop={props.useBackdrop}
+            />
+          </View>
+          {props.separator && <View style={styles.separator} />}
         </View>
       </TouchableWithoutFeedback>
     );
@@ -72,27 +97,36 @@ class SelectInput extends AbstractSelectInput {
 }
 
 SelectInput.propTypes = {
-  buttonsBackgroundColor:  PropTypes.string,
-  buttonsTextColor:        PropTypes.string,
-  cancelKeyText:           PropTypes.string,
-  keyboardBackgroundColor: PropTypes.string,
-  labelStyle:              PropTypes.object,
-  onEndEditing:            PropTypes.func,
-  onSubmitEditing:         PropTypes.func,
-  options:                 PropTypes.array,
-  submitKeyText:           PropTypes.string,
-  style:                   PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
-  value:                   PropTypes.any,
+  useBackdrop:              PropTypes.bool,
+  buttonsTextColor:         PropTypes.string,
+  cancelKeyText:            PropTypes.string,
+  keyboardBackgroundColor:  PropTypes.string,
+  labelStyle:               PropTypes.object,
+  onEndEditing:             PropTypes.func,
+  onSubmitEditing:          PropTypes.func,
+  options:                  PropTypes.array,
+  submitKeyText:            PropTypes.string,
+  style:                          PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  pickerItemColor:                PropTypes.string,
+  styleKeyboard:                  PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardHeader:            PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonLeft:        PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonLeftLabel:   PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  styleKeyboardButtonRight:       PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonRightLabel:  PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  value:                    PropTypes.any,
+  separator:                PropTypes.bool
 };
 
 SelectInput.defaultProps = {
+  useBackdrop:             false,
   cancelKeyText:           'Cancel',
   keyboardBackgroundColor: '#FFFFFF',
-  buttonsBackgroundColor:  '#CCCFD6',
   buttonsTextColor:        '#006BFF',
   options:                 [{ value: 0, label: '0' }],
   submitKeyText:           'Done',
   value:                   0,
+  separator:               true
 };
 
 export default SelectInput;

@@ -84,10 +84,13 @@ export default class example extends Component {
               options={this.getPickerOptions()}
               onCancelEditing={() => console.log('onCancel')}
               onSubmitEditing={this.onSubmitEditingSmall0.bind(this)}
-              style={[styles.selectInput, styles.selectInputSmall]}
+              styleField={{paddingTop: 0}}
             />
           </View>
-
+          <View style={{
+            backgroundColor: '#BCBBC1',
+            width: StyleSheet.hairlineWidth
+          }} />
           <View style={styles.smallInputWrapper}>
             <Text style={styles.label}>
               Small input 1
@@ -98,21 +101,31 @@ export default class example extends Component {
               options={this.getPickerOptions()}
               onCancelEditing={() => console.log('onCancel')}
               onSubmitEditing={this.onSubmitEditingSmall1.bind(this)}
-              style={[styles.selectInput, styles.selectInputSmall]}
+              styleField={{paddingTop: 0}}
             />
           </View>
         </View>
 
-        <Text style={styles.label}>
-          Large input
-        </Text>
-
         <SelectInput
           value={state.valueLarge}
+          label='Large input'
           options={this.getPickerOptions()}
           onCancelEditing={() => console.log('onCancel')}
           onSubmitEditing={this.onSubmitEditingLarge.bind(this)}
-          style={[styles.selectInput, styles.selectInputLarge]}
+          styleKeyboardHeader={{
+            backgroundColor: '#00000099'
+          }}
+          pickerItemColor='white'
+          styleKeyboard={{
+            backgroundColor: '#00000099'
+          }}
+          styleKeyboardButtonLeftLabel={{
+            color: 'white'
+          }}
+          styleKeyboardButtonRightLabel={{
+            color: 'white'
+          }}
+          useBackdrop
         />
 
         <View style={styles.bananawrapper}>
@@ -136,19 +149,22 @@ const styles = StyleSheet.create({
   scrollViewContentContainer: {
     flex:                     1,
     width:                    SCREEN_WIDTH,
-    padding:                  MARGIN_LARGE,
     flexDirection:            'column',
     justifyContent:           'flex-start',
+    paddingTop:               20
   },
   label: {
-    fontSize:                 13,
+    fontSize:                 15,
+    lineHeight:               20,
     marginTop:                MARGIN_LARGE,
+    marginHorizontal:         MARGIN_LARGE,
   },
   row: {
     flexDirection:            'row',
     justifyContent:           'space-between',
   },
   smallInputWrapper: {
+    flex: 1,
     flexDirection:            'column'
   },
   selectInput: {

@@ -13,11 +13,19 @@ class AbstractSelectInput extends Component {
   onCancel() {
     let props = this.props;
 
+    this.setState({
+      active: false
+    });
+
     props.onEndEditing && props.onEndEditing();
   }
 
   onSubmit(value) {
     let onSubmitEditing = this.props.onSubmitEditing;
+
+    this.setState({
+      active: false
+    });
 
     this.setState({selectedValue: value}, function() {
       onSubmitEditing && onSubmitEditing(value);

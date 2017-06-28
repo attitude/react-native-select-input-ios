@@ -10,7 +10,7 @@
     "prop-types": "^15.5.10",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.2",
-    "react-native-select-input-ios": "git+https://git@github.com/markuswind/react-native-select-input-ios.git"
+    "react-native-select-input-ios": "git://github.com/attitude/react-native-select-input-ios.git#next"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",

@@ -4,58 +4,111 @@
  */
 
 import KeyboardButton from './KeyboardButton.js';
-import styles from './../stylesheets/customKeyboard.css.js';
+import styles from '../stylesheets/selectInputIOS.css.js';
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import {
+  Animated,
+  Dimensions,
   Modal,
+  Text,
   TouchableWithoutFeedback,
   View
 } from 'react-native';
 
+const SCREENHEIGHT = Dimensions.get('window').height / 2
+
 class CustomKeyboard extends Component {
   constructor(props) {
      super(props);
+
+     this.state = {
+       keyboardHeight: SCREENHEIGHT,
+       transform: new Animated.Value(SCREENHEIGHT)
+     }
   }
 
   onCancelPress() {
-    this.props.onCancelPress();
+    this.hideKeyboard(() => {
+      this.props.onCancelPress();
+    })
   }
 
   onSubmitPress() {
-    this.props.onSubmitPress();
+    this.hideKeyboard(() => {
+      this.props.onSubmitPress();
+    })
+  }
+
+  showKeyboard () {
+    Animated.timing(
+      this.state.transform, {
+        toValue: 0,
+        duration: 150
+      }
+    ).start()
+  }
+
+  hideKeyboard(callback) {
+    Animated.timing(
+      this.state.transform, {
+        toValue: this.state.keyboardHeight,
+        duration: 150
+      }
+    ).start(() => {
+      if (callback) {
+        callback()
+      }
+    })
   }
 
   render() {
     let props = this.props;
 
     return (
-      <Modal animationType={'slide'} transparent={true} visible={props.visible}>
+      <Modal animationType={'fade'} transparent={true} visible={props.visible} onShow={() => {this.showKeyboard()}}>
         <TouchableWithoutFeedback onPress={this.onCancelPress.bind(this)}>
-          <View style={styles.container}>
-            <View style={styles.modal}>
-              <View style={[styles.buttonview, { backgroundColor: props.buttonsBackgroundColor }]}>
+          <View style={[
+            styles.keyboardBackdrop,
+            props.useBackdrop ? styles.keyboardBackdropSemitransparent : {}
+          ]}>
+            <Animated.View
+              style={[styles.modal,
+                {
+                  transform: [{translateY: this.state.transform}]
+                }
+              ]}
+              onLayout={(event) => {
+                this.setState({
+                  keyboardHeight: event.nativeEvent.layout.height,
+                  transform: new Animated.Value(event.nativeEvent.layout.height)
+                })
+              }}
+            >
+              <View style={[styles.keyboardHeader, props.styleKeyboardHeader]}>
                 <KeyboardButton
-                  color={props.buttonsTextColor}
+                  style={props.styleKeyboardButtonLeft}
+                  styleLabel={props.styleKeyboardButtonLeftLabel}
                   onPress={this.onCancelPress.bind(this)}
                   text={props.cancelKeyText}
-                  textAlign={'left'}
                 />
 
                 <KeyboardButton
-                  color={props.buttonsTextColor}
+                  style={props.styleKeyboardButtonRight}
+                  styleLabel={props.styleKeyboardButtonRightLabel}
                   onPress={this.onSubmitPress.bind(this)}
                   text={props.submitKeyText}
-                  textAlign={'right'}
                 />
               </View>
 
-              <View>
+              <View style={{
+                width: '100%'
+              }}>
                   {props.children}
               </View>
-            </View>
+            </Animated.View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -64,13 +117,23 @@ class CustomKeyboard extends Component {
 }
 
 CustomKeyboard.propTypes =  {
-  buttonsBackgroundColor: PropTypes.string,
-  buttonTextColor:        PropTypes.string,
-  cancelKeyText:          PropTypes.string,
-  onCancelPress:          PropTypes.func.isRequired,
-  onSubmitPress:          PropTypes.func.isRequired,
-  submitKeyText:          PropTypes.string,
-  visible:                PropTypes.bool.isRequired,
+  useBackdrop:                    PropTypes.bool,
+  buttonTextColor:                PropTypes.string,
+  cancelKeyText:                  PropTypes.string,
+  onCancelPress:                  PropTypes.func.isRequired,
+  onSubmitPress:                  PropTypes.func.isRequired,
+  submitKeyText:                  PropTypes.string,
+  styleKeyboard:                  PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardHeader:            PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonLeft:        PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonLeftLabel:   PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  styleKeyboardButtonRight:       PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonRightLabel:  PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  visible:                        PropTypes.bool.isRequired,
 };
+
+CustomKeyboard.defaultProps = {
+  useBackdrop:    false
+}
 
 export default CustomKeyboard;

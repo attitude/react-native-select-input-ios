@@ -4,13 +4,16 @@
  */
 
 import CustomKeyboard from './CustomKeyboard.js';
-import styles from './../stylesheets/pickerKeyboard.css.js';
+import styles from '../stylesheets/selectInputIOS.css.js';
+import { colors } from '../stylesheets/selectInputIOS.css.js';
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import {
   Picker,
+  Text,
+  View,
 } from 'react-native';
 
 class PickerKeyboard extends Component {
@@ -63,32 +66,36 @@ class PickerKeyboard extends Component {
 
     return (
       <CustomKeyboard
-        buttonsBackgroundColor={props.buttonsBackgroundColor}
+        styleKeyboard={props.styleKeyboard}
+        styleKeyboardHeader={props.styleKeyboardHeader}
+        styleKeyboardButtonLeft={props.styleKeyboardButtonLeft}
+        styleKeyboardButtonLeftLabel={props.styleKeyboardButtonLeftLabel}
+        styleKeyboardButtonRight={props.styleKeyboardButtonRight}
+        styleKeyboardButtonRightLabel={props.styleKeyboardButtonRightLabel}
         buttonsTextColor={props.buttonsTextColor}
         cancelKeyText={props.cancelKeyText}
         onCancelPress={this.onCancelPress.bind(this)}
         onSubmitPress={this.onSubmitPress.bind(this)}
         submitKeyText={props.submitKeyText}
         visible={this.state.visible}
+        useBackdrop={props.useBackdrop}
         >
         <Picker
           ref={(c) => { this.picker = c; }}
           selectedValue={state.value}
           onValueChange={this.onValueChange.bind(this)}
-          style={[
-            styles.pickerview,
-            { backgroundColor: props.keyboardBackgroundColor }
-          ]}
-          >
-            {props.options.map((option, index) => {
-              return (
-                <Picker.Item
-                  key={option.value || index}
-                  value={option.value}
-                  label={option.label}
-                />
-              );
-            })}
+          style={[styles.keyboard, props.styleKeyboard]}
+        >
+          {props.options.map((option, index) => {
+            return (
+              <Picker.Item
+                color={props.pickerItemColor || colors.primary}
+                key={option.value || index}
+                value={option.value}
+                label={option.label}
+              />
+            );
+          })}
         </Picker>
       </CustomKeyboard>
     );
@@ -96,15 +103,26 @@ class PickerKeyboard extends Component {
 }
 
 PickerKeyboard.propTypes = {
-  buttonsBackgroundColor: PropTypes.string,
-  buttonsTextColor:       PropTypes.string,
-  cancelKeyText:          PropTypes.string,
-  onCancel:               PropTypes.func,
-  onSubmit:               PropTypes.func,
-  options:                PropTypes.array,
-  style:                  PropTypes.object,
-  submitKeyText:          PropTypes.string,
-  value:                  PropTypes.any,
+  useBackdrop:                    PropTypes.bool,
+  buttonsTextColor:               PropTypes.string,
+  cancelKeyText:                  PropTypes.string,
+  onCancel:                       PropTypes.func,
+  onSubmit:                       PropTypes.func,
+  options:                        PropTypes.array,
+  style:                          PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  pickerItemColor:                PropTypes.string,
+  styleKeyboard:                  PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardHeader:            PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonLeft:        PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonLeftLabel:   PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  styleKeyboardButtonRight:       PropTypes.oneOfType([View.propTypes.style, PropTypes.arrayOf(View.propTypes.style)]),
+  styleKeyboardButtonRightLabel:  PropTypes.oneOfType([Text.propTypes.style, PropTypes.arrayOf(Text.propTypes.style)]),
+  submitKeyText:                  PropTypes.string,
+  value:                          PropTypes.any,
+};
+
+PickerKeyboard.defaultProps = {
+  useBackdrop:    false
 };
 
 export default PickerKeyboard;
